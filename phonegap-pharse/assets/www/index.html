@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Find Faktur</title>
+    <script src="jquery.js"></script>
+<style>
+body {
+   background: grey;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+#myProgress {
+  
+  position: relative;
+  background-color: #ddd;
+display: none;
+}
+
+#myBar {
+  background-color: #00c108;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+}
+</style>
+</head>
+
+<body>
+    
+
+<form id="frm1" >
+  Search: <input type="number" id="scr" required>
+<input type="button" onclick="klik()" value="Submit">
+</form>
+<div id="myProgress">
+  <div id="myBar"></div>
+</div>
+
+<div class="mypanel"></div>
+
+    <script>
+function klik() {
+var a=document.getElementById("scr").value;
+if (a==null || a=="")
+        {
+            alert("Mohon Isi Nomor Faktur");
+            return false;
+        }
+$('#myProgress').show()
+var elem = document.getElementById("myBar");   
+  var width = 0;
+  var id = setInterval(frame, 80);
+  function frame() {
+    if (width == 100) {
+      clearInterval(id);
+    } else {
+      width++; 
+      elem.style.width = width + '%'; 
+    }
+  }
+
+	var a   = document.getElementById("scr").value;
+    document.getElementById("frm1").innerHTML = "Searching :"+a;
+//241880
+$.getJSON('https://cors.io/?http://ddns.pandawa-mqzz.com:81/barangjadi/realtime/apiscr/'+a, function(data) {
+if (data.length) {
+    var text = `No faktur: ${data[0].faktur_kode}<br>
+                    Name: ${data[0].faktur_nama}<br>
+                    Status: ${data[0].faktur_status}`
+                    
+        $('#myProgress').hide()
+	$('#frm1').hide()
+        $(".mypanel").html(text);
+}
+else {
+$('#myProgress').hide()
+$('#frm1').hide()
+var text = `Nomor Faktur Tidak Ditemukan<br>
+Mohon Periksa Kembali`    
+$(".mypanel").html(text);
+setTimeout("location.reload(true);", 3000);
+}
+
+        
+    });
+}
+
+    
+    </script>
+    
+</body>
+</html>
